@@ -17,6 +17,7 @@
 
         public void AddMovie(Movie movie)
         {
+            
             // Kolla om filmen redan finns, uppdatera i så fall
             // Om inte, lägg till filmen i databasen
             // Lägg till skådespelarna i databasen

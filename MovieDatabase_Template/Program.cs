@@ -1,4 +1,7 @@
-﻿Console.WriteLine("Hello, Movie fans!");
+﻿using MovieDatabase;
+using MovieDatabase_Template;
+
+Console.WriteLine("Hello, Movie fans!");
 
 // Börja med att lägga till Nuget för MySQL
 // Sen kan ni kolla på koden ;)
