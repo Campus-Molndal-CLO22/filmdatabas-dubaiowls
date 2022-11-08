@@ -6,6 +6,8 @@
     using System.Text;
     using System.Threading.Tasks;
     using MovieDatabase;
+    using MySql.Data.MySqlClient;
+
     public class MovieCrud
     {
         string connString = "";
