@@ -13,29 +13,29 @@
     {
         //string connString = "";
         MySqlConnection cnn = null;
-        string sql = "";
+        
 
         public MovieCrud(string connString) 
         {
             var connection = new MySqlConnection(connString);
             cnn = connection;
-            string sql = "";
-            var cmd = new MySqlCommand(sql, cnn);
+            
+            
             cnn.Open();
         }
 
         public void AddMovie(Movie movie)
         {
-            sql = $"INSERT INTO `Movie`(`Titel`, `Year`, `Genre`,`IMDB` ) VALUES('{movie.Title}','{movie.Year}','{movie.Genre}','{movie.IMDB}')";
-            
-            
+            string sql = $"INSERT INTO `Movie`(`Titel`, `Year`, `Genre`,`IMDB` ) VALUES('{movie.Title}','{movie.Year}','{movie.Genre}','{movie.IMDB}')";
+
+            var cmd = new MySqlCommand(sql, cnn);
 
             var dt = new DataTable();
             var adt = new MySqlDataAdapter(sql, cnn);
             adt.Fill(dt);
             // Kolla om filmen redan finns, uppdatera i så fall
             // Om inte, lägg till filmen i databasen
-            Actor actor = new() { Name = "Brad Pitt", Age = 58, BornYear = 1963, Movies = "Fight Club\nThe Big Short" };
+            Actor actor = new() { Name = "Chris Pratt", Age = 58, BornYear = 1963, Movies = "Fight Club\nThe Big Short" };
 
             AddActor(actor);
             // Lägg till skådespelarna i databasen
@@ -60,8 +60,22 @@
 
         public void AddActorToMovie(Actor actor, Movie movie)
         {
-            string sql = $"INSERT INTO `Movie` (`Actors`) VALUES ('{actor.Name}')";
+            movie.Actors.Add(actor);
+            movie.Actors.Add(actor);
+            movie.Actors.Add(actor);
+            string GetNameFromList(List<Actor> actors)
+            {
+                string names = "";
 
+                foreach (Actor name in actors)
+                {
+                    names +=(name.Name) + "\n";
+                }
+                return names;
+            }
+            
+            string sql = $"UPDATE `Movie` SET `Actors` = '{GetNameFromList(movie.Actors)}' WHERE Movie.Id = '7'";
+            //UPDATE `Movie` SET `Id`= '[value-1]',`Titel`= '[value-2]',`Year`= '[value-3]',`Genre`= '[value-4]',`Actors`= '[value-5]',`IMDB`= '[value-6]'
             var cmd = new MySqlCommand(sql, cnn);
 
             var dt = new DataTable();
