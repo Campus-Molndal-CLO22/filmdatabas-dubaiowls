@@ -13,28 +13,33 @@
     {
         //string connString = "";
         MySqlConnection cnn = null;
+        string sql = "";
 
         public MovieCrud(string connString) 
         {
             var connection = new MySqlConnection(connString);
             cnn = connection;
+            string sql = "";
+            var cmd = new MySqlCommand(sql, cnn);
             cnn.Open();
-
         }
 
         public void AddMovie(Movie movie)
         {
-            string sql = $"INSERT INTO `Movie`(`Titel`, `Year`, `Genre`, `Actors`,`IMDB` ) VALUES('{movie.Title}','{movie.Year}','{movie.Genre}','{movie.Actors}', '{movie.IMDB}')";
+            sql = $"INSERT INTO `Movie`(`Titel`, `Year`, `Genre`,`IMDB` ) VALUES('{movie.Title}','{movie.Year}','{movie.Genre}','{movie.IMDB}')";
             
-            var cmd = new MySqlCommand(sql, cnn);
+            
 
             var dt = new DataTable();
             var adt = new MySqlDataAdapter(sql, cnn);
             adt.Fill(dt);
             // Kolla om filmen redan finns, uppdatera i så fall
             // Om inte, lägg till filmen i databasen
+            Actor actor = new() { Name = "Brad Pitt", Age = 58, BornYear = 1963, Movies = "Fight Club\nThe Big Short" };
 
+            AddActor(actor);
             // Lägg till skådespelarna i databasen
+            AddActorToMovie(actor, movie);
             // Lägg till relationen mellan filmen och skådespelarna i databasen
             
         }
@@ -43,7 +48,7 @@
         {
             string sql = $"INSERT INTO `Actor`(`Name`, `Age`, `BornYear`, `Movies`) VALUES ('{actor.Name}','{actor.Age}', '{actor.BornYear}','{actor.Movies}')";
 
-            var cmd = new MySqlCommand(sql, cnn);
+            
 
             var dt = new DataTable();
             var adt = new MySqlDataAdapter(sql, cnn);
@@ -55,9 +60,16 @@
 
         public void AddActorToMovie(Actor actor, Movie movie)
         {
+            string sql = $"INSERT INTO `Movie` (`Actors`) VALUES ('{actor.Name}')";
+
+            var cmd = new MySqlCommand(sql, cnn);
+
+            var dt = new DataTable();
+            var adt = new MySqlDataAdapter(sql, cnn);
+            adt.Fill(dt);
             // Kolla om relationen finns i databasen, i så fall är du klar
             // Annars lägg till relationen mellan filmen och skådespelaren i databasen
-            
+
         }
         /*
         public List<Movie> GetMovies()
