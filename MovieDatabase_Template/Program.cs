@@ -1,7 +1,11 @@
 ﻿using MovieDatabase;
 using MovieDatabase_Template;
 
-Console.WriteLine("Hello, Movie fans!");
+MovieCrud SQLHandler = new(@"Server=ns8.inleed.net;Database=s60127_DubaiOwls;Uid=s60127_Alexander;Pwd=fn3OcaNLnC9SEuBe");
+Movie film = new() {Title = "Star Wars", Year = 1980, Genre = "Sci-Fi", Actors = "Mark Hamill" , IMDB = "ABC" };
+
+SQLHandler.AddMovie(film);
+
 
 // Börja med att lägga till Nuget för MySQL
 // Sen kan ni kolla på koden ;)
