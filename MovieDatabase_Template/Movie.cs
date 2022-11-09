@@ -14,7 +14,15 @@
         public int Year { get; set; }
         public string Genre { get; set; }
 
-        public List<Actor> Actors { get; set; }
+        public string IMDB { get; set; }
+
+        // Lägg till fler properties
+        public string Actors { get; set; }
+
+        public Movie()
+        {
+
+        }
     }
 
 }
