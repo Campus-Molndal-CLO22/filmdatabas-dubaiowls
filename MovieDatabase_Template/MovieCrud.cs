@@ -24,11 +24,27 @@
 
         public void AddMovie(Movie movie)
         {
-            string sql = $"INSERT IF NOT EXISTS INTO `Movie`(`Titel`, `Year`, `Genre`, `Actors`,`IMDB` ) VALUES('{movie.Title}','{movie.Year}','{movie.Genre}','{movie.Actors}', '{movie.IMDB}')";
-            var cmd = new MySqlCommand(sql, cnn);
-
             var dt = new DataTable();
+
+            string sql = $"INSERT INTO " +
+                         $"           `Movie`" +
+                         $"                (`Titel`," +
+                         $"                 `Year`, " +
+                         $"                 `Genre`, " +
+                         $"                 `Actors`," +
+                         $"                 `IMDB` ) " +
+                         $"VALUES(" +
+                         $"       '{movie.Title}'," +
+                         $"       '{movie.Year}'," +
+                         $"       '{movie.Genre}'," +
+                         $"       '{movie.Actors}', " +
+                         $"       '{movie.IMDB}'))";
+
+            var cmd = new MySqlCommand(sql, cnn);
             var adt = new MySqlDataAdapter(sql, cnn);
+            
+
+            adt.Fill(dt);
 
             // Kolla om filmen redan finns, uppdatera i så fall
             // Om inte, lägg till filmen i databasen
