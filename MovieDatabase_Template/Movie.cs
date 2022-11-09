@@ -12,8 +12,8 @@
         public int Id { get; set; }
         public string Title { get; set; }
         public int Year { get; set; }
+        public string Genre { get; set; }
 
-        // Lägg till fler properties
         public List<Actor> Actors { get; set; }
     }
 
