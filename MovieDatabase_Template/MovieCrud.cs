@@ -168,7 +168,7 @@
             // Ta bort alla relationer mellan skådespelaren och filmerna från databasen
         }
 
-        public void DeleteMove(int moveId)
+        public void DeleteMovie(int movieId)
         {
             // Ta bort filmen från databasen
             // Ta bort alla relationer mellan filmen och skådespelarna från databasen

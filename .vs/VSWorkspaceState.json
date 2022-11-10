@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\MovieDatabase_Template"
   ],
-  "SelectedNode": "\\MovieDatabase_Template.sln",
+  "SelectedNode": "\\MovieDatabase_Template\\MovieCrud.cs",
   "PreviewInSolutionExplorer": false
 }
