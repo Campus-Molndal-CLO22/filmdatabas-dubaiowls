@@ -32,6 +32,8 @@
             var adt = new MySqlDataAdapter(CheckIfExist, cnn);
             adt.Fill(dt);
 
+           
+
             if (dt.Rows.Count > 0)
             {
                 Console.WriteLine("Den filmen finns redan i databasen");
@@ -44,14 +46,20 @@
                 adt = new MySqlDataAdapter(sql, cnn);
                 adt.Fill(dt);
 
+                
+                /*
                 string Newsql = $"INSERT INTO `ConnectionTable`(`MovieId`) SELECT Id FROM Movie WHERE Title = '{movie.Title}'";
                 var cmd = new MySqlCommand(Newsql, cnn);
                 cmd.ExecuteNonQuery();
+                */
+
+
             }
 
-           
             
-           
+
+            //Actor actor = new() { Name = "Pitt Brad", Age = 58, BornYear = 1963 };
+            //AddActorToMovie(actor, movie);
 
 
 
@@ -95,26 +103,27 @@
             }
             */
             // Kolla om skådespelaren redan finns
-            string CheckIfExist = $"SELECT Name, Age FROM Actor WHERE Name = '{actor.Name}' AND Age='{actor.Age}'";
+            string CheckIfExist = $"SELECT * FROM Actor WHERE Name = '{actor.Name}' AND Age='{actor.Age}'";
             var dt = new DataTable();
             var adt = new MySqlDataAdapter(CheckIfExist, cnn);
             adt.Fill(dt);
-
+            
             if (dt.Rows.Count > 0)
             {
-                Console.WriteLine("Den Skådspelaren finns redan i databasen");
+                string AddToConnectionTable = $"INSERT INTO `ConnectionTable`(`ActorId`) SELECT Id FROM Actor WHERE Name='{actor.Name} AND Age={actor.Age}'";
+                var cmd = new MySqlCommand(AddToConnectionTable, cnn);
+                cmd.ExecuteNonQuery();
             }
             else // Om inte, lägg till filmen i databasen
             {
-                string sql = $"INSERT INTO `Movie`(`Title`, `Year`, `Genre`,`IMDB` ) VALUES('{movie.Title}','{movie.Year}','{movie.Genre}','{movie.IMDB}')";
-
-                dt = new DataTable();
-                adt = new MySqlDataAdapter(sql, cnn);
-                adt.Fill(dt);
-
-                string Newsql = $"INSERT INTO `ConnectionTable`(`MovieId`) SELECT Id FROM Movie WHERE Title = '{movie.Title}'";
-                var cmd = new MySqlCommand(Newsql, cnn);
+                string sql = $"INSERT INTO `Actor`(`Name`, `Age`, `BornYear`) VALUES ('{actor.Name}','{actor.Age}','{actor.BornYear}')";
+                var cmd = new MySqlCommand(sql, cnn);
                 cmd.ExecuteNonQuery();
+
+                string AddToConnectionTable = $"INSERT INTO `ConnectionTable`(`ActorId`) SELECT Id FROM Actor,Movie WHERE Actor.Name='{actor.Name}' AND Movie.Title='{movie.Title}'";
+                cmd = new MySqlCommand(AddToConnectionTable, cnn);
+                cmd.ExecuteNonQuery();
+
             }
 
 
