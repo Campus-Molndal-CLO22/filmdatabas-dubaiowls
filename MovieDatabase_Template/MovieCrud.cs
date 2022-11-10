@@ -24,13 +24,31 @@
 
         public void AddMovie(Movie movie)
         {
-            string sql = $"INSERT INTO `Movie`(`Titel`, `Year`, `Genre`, `Actors`,`IMDB` ) VALUES('{movie.Title}','{movie.Year}','{movie.Genre}','{movie.Actors}', '{movie.IMDB}')";
-            
-            var cmd = new MySqlCommand(sql, cnn);
+            //string sql = $"INSERT INTO `Movie`(`Titel`, `Year`, `Genre`, `Actors`,`IMDB` ) VALUES('{movie.Title}','{movie.Year}','{movie.Genre}','{movie.Actors}', '{movie.IMDB}')";
+            //sql kod för att kolla om filmen finns i databasen
+            string sql = $"SELECT * FROM `Movie` WHERE `Titel` = '{movie.Title}' AND `Year` = '{movie.Year}'";
+            MySqlCommand cmd = new MySqlCommand(sql, cnn);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if (rdr.HasRows)
+            {
+                Console.WriteLine("Movie already exists in database");
+                cnn.Close();
+            }
+            else
+            {
+                rdr.Close();
+                sql = $"INSERT INTO `Movie`(`Titel`, `Year`, `Genre`, `Actors`,`IMDB` ) VALUES('{movie.Title}','{movie.Year}','{movie.Genre}','{movie.Actors}', '{movie.IMDB}')";
+                cmd = new MySqlCommand(sql, cnn);
+                cmd.ExecuteNonQuery();
+                Console.WriteLine("Movie added to database");
+                cnn.Close();
+            }
 
-            var dt = new DataTable();
-            var adt = new MySqlDataAdapter(sql, cnn);
-            adt.Fill(dt);
+            //var cmd = new MySqlCommand(sql, cnn);
+
+            //var dt = new DataTable();
+            //var adt = new MySqlDataAdapter(sql, cnn);
+            //adt.Fill(dt);
 
             // Kolla om filmen redan finns, uppdatera i så fall
             // Om inte, lägg till filmen i databasen
@@ -42,13 +60,31 @@
 
         public void AddActor(Actor actor)
         {
-            string sql = $"INSERT INTO `Actor`(`Name`, `Age`, `BornYear`, `Movies`) VALUES ('{actor.Name}','{actor.Age}', '{actor.BornYear}','{actor.Movies}')";
+            //string sql = $"INSERT INTO `Actor`(`Name`, `Age`, `BornYear`, `Movies`) VALUES ('{actor.Name}','{actor.Age}', '{actor.BornYear}','{actor.Movies}')";
+            //sql kod för att kolla om skådespelaren finns i databasen
+            cnn.Open();
+            string sql = $"SELECT * FROM `Actor` WHERE `Name` = '{actor.Name}' AND `BornYear` = '{actor.BornYear}'";
+            MySqlCommand cmd = new MySqlCommand(sql, cnn);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if (rdr.HasRows)
+            {
+                Console.WriteLine("Actor already exists in database");
+                cnn.Close();
+            }
+            else
+            {
+                rdr.Close();
+                sql = $"INSERT INTO `Actor`(`Name`, `Age`, `BornYear`, `Movies`) VALUES ('{actor.Name}','{actor.Age}', '{actor.BornYear}','{actor.Movies}')";
+                cmd = new MySqlCommand(sql, cnn);
+                cmd.ExecuteNonQuery();
+                Console.WriteLine("Actor added to database");
+                cnn.Close();
+            }
+            //var cmd = new MySqlCommand(sql, cnn);
 
-            var cmd = new MySqlCommand(sql, cnn);
-
-            var dt = new DataTable();
-            var adt = new MySqlDataAdapter(sql, cnn);
-            adt.Fill(dt);
+            //var dt = new DataTable();
+            //var adt = new MySqlDataAdapter(sql, cnn);
+            //adt.Fill(dt);
             // Kolla om skådespelaren finns i databasen
             // Uppdatera i så fall annars
             // Lägg till skådespelaren i databasen
