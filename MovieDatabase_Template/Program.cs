@@ -7,7 +7,7 @@ Actor actor = new();
 
 //Actor actor = new() { Name = "Brad Pitt", Age = 58, BornYear = 1963, Movies = "Fight Club\nThe Big Short"};
 
-SQLHandler.AddMovie(movie);
+//SQLHandler.AddMovie(movie);
 SQLHandler.GetMovies();
 //SQLHandler.AddActor(actor);
 

@@ -10,20 +10,21 @@
     using System.Data;
 
     public class MovieCrud
-    { 
-        public MovieCrud(string login)
-        {
-
-        }
-        
+    {
         MySqlConnection cnn = null;
         MySqlDataAdapter adt = new();
         DataTable dt = new ();
         string sql = "";
 
+        public MovieCrud(string connString)
+        {
+            cnn = new MySqlConnection(connString);
+            cnn.Open();
+        }
+
         public void AddMovie(Movie movie)
         {
-<<<<<<< HEAD
+
             dt = new DataTable();
             sql = $"SELECT Titel FROM Movie WHERE Titel = '{movie.Title}'";
             adt = new MySqlDataAdapter(sql, cnn);
@@ -34,17 +35,17 @@
                 Console.WriteLine("Den filmen finns redan i databasen");
                 foreach(DataRow row in dt.Rows)
                 {
-                    Console.WriteLine(row);
+                    Console.WriteLine($"{row["\"Title\",\"Year\",\"Genre\",\"IMDB\""]}");
                 }
             }
             else                        // Om inte, lägg till filmen i databasen
             {
-                sql = $"INSERT INTO `Movie`(`Titel`, `Year`, `Genre`,`IMDB` ) " +
-                      $"VALUES('{movie.Title}','{movie.Year}','{movie.Genre}','{movie.IMDB}')";
-=======
+            sql = $"INSERT INTO `Movie`(`Titel`, `Year`, `Genre`,`IMDB` ) " +
+                  $"VALUES('{movie.Title}','{movie.Year}','{movie.Genre}','{movie.IMDB}')";
+
             var dt = new DataTable();
 
-            string sql = $"INSERT INTO " +
+            sql = $"INSERT INTO " +
                          $"           `Movie`" +
                          $"                (`Titel`," +
                          $"                 `Year`, " +
@@ -63,7 +64,7 @@
             
 
             adt.Fill(dt);
->>>>>>> 6c80af59c5e0169f48ef01d207827e750e134fd2
+
 
                 dt = new DataTable();
                 adt = new MySqlDataAdapter(sql, cnn);
@@ -121,13 +122,13 @@
             // Hämta alla filmer från databasen
             dt = new DataTable();
             sql = "SELECT * " +
-                    "FROM Movies";
+                    "FROM Movie";
             adt = new MySqlDataAdapter(sql, cnn);
             adt.Fill(dt);
 
             foreach(DataRow row in dt.Rows)
             {
-                Console.WriteLine(row);
+                Console.WriteLine($"{row["Title"]}, {row["Year"]}, {row["Genre"]}, {row["IMDB"]}");
             }
             // Hämta alla skådespelare från databasen
             // Hämta alla relationer mellan filmer och skådespelare från databasen
