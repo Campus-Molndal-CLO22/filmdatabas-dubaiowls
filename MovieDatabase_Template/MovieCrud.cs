@@ -23,6 +23,7 @@
 
         public void AddMovie(Movie movie)
         {
+<<<<<<< HEAD
             dt = new DataTable();
             sql = $"SELECT Titel FROM Movie WHERE Titel = '{movie.Title}'";
             adt = new MySqlDataAdapter(sql, cnn);
@@ -40,6 +41,29 @@
             {
                 sql = $"INSERT INTO `Movie`(`Titel`, `Year`, `Genre`,`IMDB` ) " +
                       $"VALUES('{movie.Title}','{movie.Year}','{movie.Genre}','{movie.IMDB}')";
+=======
+            var dt = new DataTable();
+
+            string sql = $"INSERT INTO " +
+                         $"           `Movie`" +
+                         $"                (`Titel`," +
+                         $"                 `Year`, " +
+                         $"                 `Genre`, " +
+                         $"                 `Actors`," +
+                         $"                 `IMDB` ) " +
+                         $"VALUES(" +
+                         $"       '{movie.Title}'," +
+                         $"       '{movie.Year}'," +
+                         $"       '{movie.Genre}'," +
+                         $"       '{movie.Actors}', " +
+                         $"       '{movie.IMDB}'))";
+
+            var cmd = new MySqlCommand(sql, cnn);
+            var adt = new MySqlDataAdapter(sql, cnn);
+            
+
+            adt.Fill(dt);
+>>>>>>> 6c80af59c5e0169f48ef01d207827e750e134fd2
 
                 dt = new DataTable();
                 adt = new MySqlDataAdapter(sql, cnn);
