@@ -26,27 +26,47 @@
 
         public void AddMovie(Movie movie)
         {
-            string sql = $"INSERT INTO `Movie`(`Titel`, `Year`, `Genre`,`IMDB` ) VALUES('{movie.Title}','{movie.Year}','{movie.Genre}','{movie.IMDB}')";
 
-            var cmd = new MySqlCommand(sql, cnn);
+            string CheckIfExist = $"SELECT Titel FROM Movie WHERE Titel = '{movie.Title}'";
+            //string sql = $"INSERT INTO `Movie`(`Titel`, `Year`, `Genre`,`IMDB` ) VALUES('{movie.Title}','{movie.Year}','{movie.Genre}','{movie.IMDB}')";
+
+            //var cmd = new MySqlCommand(CheckIfExist, cnn);
 
             var dt = new DataTable();
-            var adt = new MySqlDataAdapter(sql, cnn);
+            var adt = new MySqlDataAdapter(CheckIfExist, cnn);
             adt.Fill(dt);
+
+            if (dt.Rows.Count > 0)
+            {
+                Console.WriteLine("Den filmen finns redan i databasen");
+            }
+            else
+            {
+                string sql = $"INSERT INTO `Movie`(`Titel`, `Year`, `Genre`,`IMDB` ) VALUES('{movie.Title}','{movie.Year}','{movie.Genre}','{movie.IMDB}')";
+
+                //cmd = new MySqlCommand(sql, cnn);
+
+                dt = new DataTable();
+                adt = new MySqlDataAdapter(sql, cnn);
+                adt.Fill(dt);
+            }
             // Kolla om filmen redan finns, uppdatera i så fall
             // Om inte, lägg till filmen i databasen
-            Actor actor = new() { Name = "Chris Pratt", Age = 58, BornYear = 1963, Movies = "Fight Club\nThe Big Short" };
+            
+            
+            //Actor actor = new() { Name = "Chris Pratt", Age = 58, BornYear = 1963, Movies = "Fight Club\nThe Big Short" };
 
-            AddActor(actor);
+            //AddActor(actor);
             // Lägg till skådespelarna i databasen
-            AddActorToMovie(actor, movie);
+            //AddActorToMovie(actor, movie);
             // Lägg till relationen mellan filmen och skådespelarna i databasen
             
         }
 
         public void AddActor(Actor actor)
         {
-            string sql = $"INSERT INTO `Actor`(`Name`, `Age`, `BornYear`, `Movies`) VALUES ('{actor.Name}','{actor.Age}', '{actor.BornYear}','{actor.Movies}')";
+            string sql = $"INSERT INTO `Actor`(`Name`, `Age`, `BornYear`, `Movies`)" +
+                $" VALUES ('{actor.Name}','{actor.Age}', '{actor.BornYear}','{actor.Movies}')";
 
             
 
@@ -74,7 +94,7 @@
                 return names;
             }
             
-            string sql = $"UPDATE `Movie` SET `Actors` = '{GetNameFromList(movie.Actors)}' WHERE Movie.Id = '7'";
+            string sql = $"UPDATE `Movie` SET `Actors` = '{GetNameFromList(movie.Actors)}' WHERE Movie.Titel ='{movie.Title}'";
             //UPDATE `Movie` SET `Id`= '[value-1]',`Titel`= '[value-2]',`Year`= '[value-3]',`Genre`= '[value-4]',`Actors`= '[value-5]',`IMDB`= '[value-6]'
             var cmd = new MySqlCommand(sql, cnn);
 
