@@ -7,7 +7,7 @@
         public int Age { get; set; }
         public int BornYear { get; set; }
         public int MovieId { get; set; }
-        public string Movies { get; set; }
+        public List<Movie> Movies { get; set; }
        
         public Actor()
         {

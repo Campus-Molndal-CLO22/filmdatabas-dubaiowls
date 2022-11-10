@@ -26,12 +26,8 @@
 
         public void AddMovie(Movie movie)
         {
-
+            // Kolla om filmen redan finns, uppdatera i så fall
             string CheckIfExist = $"SELECT Titel FROM Movie WHERE Titel = '{movie.Title}'";
-            //string sql = $"INSERT INTO `Movie`(`Titel`, `Year`, `Genre`,`IMDB` ) VALUES('{movie.Title}','{movie.Year}','{movie.Genre}','{movie.IMDB}')";
-
-            //var cmd = new MySqlCommand(CheckIfExist, cnn);
-
             var dt = new DataTable();
             var adt = new MySqlDataAdapter(CheckIfExist, cnn);
             adt.Fill(dt);
@@ -40,20 +36,14 @@
             {
                 Console.WriteLine("Den filmen finns redan i databasen");
             }
-            else
+            else // Om inte, lägg till filmen i databasen
             {
                 string sql = $"INSERT INTO `Movie`(`Titel`, `Year`, `Genre`,`IMDB` ) VALUES('{movie.Title}','{movie.Year}','{movie.Genre}','{movie.IMDB}')";
-
-                //cmd = new MySqlCommand(sql, cnn);
 
                 dt = new DataTable();
                 adt = new MySqlDataAdapter(sql, cnn);
                 adt.Fill(dt);
             }
-            // Kolla om filmen redan finns, uppdatera i så fall
-            // Om inte, lägg till filmen i databasen
-            
-            
             //Actor actor = new() { Name = "Chris Pratt", Age = 58, BornYear = 1963, Movies = "Fight Club\nThe Big Short" };
 
             //AddActor(actor);
