@@ -10,48 +10,41 @@
     using System.Data;
 
     public class MovieCrud
-    {
-        //string connString = "";
-        MySqlConnection cnn = null;
-        
-
-        public MovieCrud(string connString) 
+    { 
+        public MovieCrud(string login)
         {
-            var connection = new MySqlConnection(connString);
-            cnn = connection;
-            
-            
-            cnn.Open();
+
         }
+        
+        MySqlConnection cnn = null;
+        MySqlDataAdapter adt = new();
+        DataTable dt = new ();
+        string sql = "";
 
         public void AddMovie(Movie movie)
         {
-
-            string CheckIfExist = $"SELECT Titel FROM Movie WHERE Titel = '{movie.Title}'";
-            //string sql = $"INSERT INTO `Movie`(`Titel`, `Year`, `Genre`,`IMDB` ) VALUES('{movie.Title}','{movie.Year}','{movie.Genre}','{movie.IMDB}')";
-
-            //var cmd = new MySqlCommand(CheckIfExist, cnn);
-
-            var dt = new DataTable();
-            var adt = new MySqlDataAdapter(CheckIfExist, cnn);
+            dt = new DataTable();
+            sql = $"SELECT Titel FROM Movie WHERE Titel = '{movie.Title}'";
+            adt = new MySqlDataAdapter(sql, cnn);
             adt.Fill(dt);
 
-            if (dt.Rows.Count > 0)
+            if (dt.Rows.Count > 0)      // Kolla om filmen redan finns, uppdatera i så fall
             {
                 Console.WriteLine("Den filmen finns redan i databasen");
+                foreach(DataRow row in dt.Rows)
+                {
+                    Console.WriteLine(row);
+                }
             }
-            else
+            else                        // Om inte, lägg till filmen i databasen
             {
-                string sql = $"INSERT INTO `Movie`(`Titel`, `Year`, `Genre`,`IMDB` ) VALUES('{movie.Title}','{movie.Year}','{movie.Genre}','{movie.IMDB}')";
-
-                //cmd = new MySqlCommand(sql, cnn);
+                sql = $"INSERT INTO `Movie`(`Titel`, `Year`, `Genre`,`IMDB` ) " +
+                      $"VALUES('{movie.Title}','{movie.Year}','{movie.Genre}','{movie.IMDB}')";
 
                 dt = new DataTable();
                 adt = new MySqlDataAdapter(sql, cnn);
                 adt.Fill(dt);
             }
-            // Kolla om filmen redan finns, uppdatera i så fall
-            // Om inte, lägg till filmen i databasen
             
             
             //Actor actor = new() { Name = "Chris Pratt", Age = 58, BornYear = 1963, Movies = "Fight Club\nThe Big Short" };
@@ -65,13 +58,11 @@
 
         public void AddActor(Actor actor)
         {
-            string sql = $"INSERT INTO `Actor`(`Name`, `Age`, `BornYear`, `Movies`)" +
-                $" VALUES ('{actor.Name}','{actor.Age}', '{actor.BornYear}','{actor.Movies}')";
+            sql = $"INSERT INTO `Actor`(`Name`, `Age`, `BornYear`)" +
+                  $"VALUES ('{actor.Name}','{actor.Age}', '{actor.BornYear}')";
 
-            
-
-            var dt = new DataTable();
-            var adt = new MySqlDataAdapter(sql, cnn);
+            dt = new DataTable();
+            adt = new MySqlDataAdapter(sql, cnn);
             adt.Fill(dt);
             // Kolla om skådespelaren finns i databasen
             // Uppdatera i så fall annars
@@ -80,9 +71,6 @@
 
         public void AddActorToMovie(Actor actor, Movie movie)
         {
-            movie.Actors.Add(actor);
-            movie.Actors.Add(actor);
-            movie.Actors.Add(actor);
             string GetNameFromList(List<Actor> actors)
             {
                 string names = "";
@@ -94,9 +82,8 @@
                 return names;
             }
             
-            string sql = $"UPDATE `Movie` SET `Actors` = '{GetNameFromList(movie.Actors)}' WHERE Movie.Titel ='{movie.Title}'";
-            //UPDATE `Movie` SET `Id`= '[value-1]',`Titel`= '[value-2]',`Year`= '[value-3]',`Genre`= '[value-4]',`Actors`= '[value-5]',`IMDB`= '[value-6]'
-            var cmd = new MySqlCommand(sql, cnn);
+            sql = $"UPDATE `Movie` SET `Actors` = '{GetNameFromList(movie.Actors)}' WHERE Movie.Titel ='{movie.Title}'";
+            //UPDATE `Movie` SET `Id`= '[value-1]',`Titel`= '[value-2]',`Year`= '[value-3]',`Genre`= '[value-4]',`Actors`= '[value-5]',`IMDB`= '[value-6]
 
             var dt = new DataTable();
             var adt = new MySqlDataAdapter(sql, cnn);
@@ -105,10 +92,19 @@
             // Annars lägg till relationen mellan filmen och skådespelaren i databasen
 
         }
-        /*
-        public List<Movie> GetMovies()
+        public void GetMovies()
         {
             // Hämta alla filmer från databasen
+            dt = new DataTable();
+            sql = "SELECT * " +
+                    "FROM Movies";
+            adt = new MySqlDataAdapter(sql, cnn);
+            adt.Fill(dt);
+
+            foreach(DataRow row in dt.Rows)
+            {
+                Console.WriteLine(row);
+            }
             // Hämta alla skådespelare från databasen
             // Hämta alla relationer mellan filmer och skådespelare från databasen
             // Skapa en lista med filmer
@@ -116,6 +112,7 @@
             // Returnera listan med filmer
         }
 
+        /*
         public List<Movie> GetMoviesContaining(string search)
         {
             // Hämta alla matchande filmer från databasen

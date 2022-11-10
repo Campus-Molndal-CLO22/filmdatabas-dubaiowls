@@ -9,9 +9,5 @@
         public int MovieId { get; set; }
         public string Movies { get; set; }
        
-        public Actor()
-        {
-
-        }
     }
 }
