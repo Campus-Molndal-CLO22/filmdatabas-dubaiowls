@@ -13,21 +13,21 @@
     {
         //string connString = "";
         MySqlConnection cnn = null;
-        
 
-        public MovieCrud(string connString) 
+
+        public MovieCrud(string connString)
         {
             var connection = new MySqlConnection(connString);
             cnn = connection;
-            
-            
+
+
             cnn.Open();
         }
 
         public void AddMovie(Movie movie)
         {
             // Kolla om filmen redan finns, uppdatera i så fall
-            string CheckIfExist = $"SELECT Titel FROM Movie WHERE Titel = '{movie.Title}'";
+            string CheckIfExist = $"SELECT Title FROM Movie WHERE Title = '{movie.Title}'";
             var dt = new DataTable();
             var adt = new MySqlDataAdapter(CheckIfExist, cnn);
             adt.Fill(dt);
@@ -38,27 +38,36 @@
             }
             else // Om inte, lägg till filmen i databasen
             {
-                string sql = $"INSERT INTO `Movie`(`Titel`, `Year`, `Genre`,`IMDB` ) VALUES('{movie.Title}','{movie.Year}','{movie.Genre}','{movie.IMDB}')";
+                string sql = $"INSERT INTO `Movie`(`Title`, `Year`, `Genre`,`IMDB` ) VALUES('{movie.Title}','{movie.Year}','{movie.Genre}','{movie.IMDB}')";
 
                 dt = new DataTable();
                 adt = new MySqlDataAdapter(sql, cnn);
                 adt.Fill(dt);
+
+                string Newsql = $"INSERT INTO `ConnectionTable`(`MovieId`) SELECT Id FROM Movie WHERE Title = '{movie.Title}'";
+                var cmd = new MySqlCommand(Newsql, cnn);
+                cmd.ExecuteNonQuery();
             }
-            //Actor actor = new() { Name = "Chris Pratt", Age = 58, BornYear = 1963, Movies = "Fight Club\nThe Big Short" };
+
+           
+            
+           
+
+
 
             //AddActor(actor);
             // Lägg till skådespelarna i databasen
             //AddActorToMovie(actor, movie);
             // Lägg till relationen mellan filmen och skådespelarna i databasen
-            
+
         }
 
         public void AddActor(Actor actor)
         {
-            string sql = $"INSERT INTO `Actor`(`Name`, `Age`, `BornYear`, `Movies`)" +
-                $" VALUES ('{actor.Name}','{actor.Age}', '{actor.BornYear}','{actor.Movies}')";
+            string sql = $"INSERT INTO `Actor`(`Name`, `Age`, `BornYear`)" +
+                $" VALUES ('{actor.Name}','{actor.Age}', '{actor.BornYear}')";
 
-            
+
 
             var dt = new DataTable();
             var adt = new MySqlDataAdapter(sql, cnn);
@@ -70,6 +79,7 @@
 
         public void AddActorToMovie(Actor actor, Movie movie)
         {
+            /*
             movie.Actors.Add(actor);
             movie.Actors.Add(actor);
             movie.Actors.Add(actor);
@@ -79,18 +89,37 @@
 
                 foreach (Actor name in actors)
                 {
-                    names +=(name.Name) + "\n";
+                    names += (name.Name) + "\n";
                 }
                 return names;
             }
-            
-            string sql = $"UPDATE `Movie` SET `Actors` = '{GetNameFromList(movie.Actors)}' WHERE Movie.Titel ='{movie.Title}'";
-            //UPDATE `Movie` SET `Id`= '[value-1]',`Titel`= '[value-2]',`Year`= '[value-3]',`Genre`= '[value-4]',`Actors`= '[value-5]',`IMDB`= '[value-6]'
-            var cmd = new MySqlCommand(sql, cnn);
-
+            */
+            // Kolla om skådespelaren redan finns
+            string CheckIfExist = $"SELECT Name, Age FROM Actor WHERE Name = '{actor.Name}' AND Age='{actor.Age}'";
             var dt = new DataTable();
-            var adt = new MySqlDataAdapter(sql, cnn);
+            var adt = new MySqlDataAdapter(CheckIfExist, cnn);
             adt.Fill(dt);
+
+            if (dt.Rows.Count > 0)
+            {
+                Console.WriteLine("Den Skådspelaren finns redan i databasen");
+            }
+            else // Om inte, lägg till filmen i databasen
+            {
+                string sql = $"INSERT INTO `Movie`(`Title`, `Year`, `Genre`,`IMDB` ) VALUES('{movie.Title}','{movie.Year}','{movie.Genre}','{movie.IMDB}')";
+
+                dt = new DataTable();
+                adt = new MySqlDataAdapter(sql, cnn);
+                adt.Fill(dt);
+
+                string Newsql = $"INSERT INTO `ConnectionTable`(`MovieId`) SELECT Id FROM Movie WHERE Title = '{movie.Title}'";
+                var cmd = new MySqlCommand(Newsql, cnn);
+                cmd.ExecuteNonQuery();
+            }
+
+
+
+
             // Kolla om relationen finns i databasen, i så fall är du klar
             // Annars lägg till relationen mellan filmen och skådespelaren i databasen
 
