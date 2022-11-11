@@ -23,7 +23,30 @@
 
             cnn.Open();
         }
+        public int GetActorId(Actor actor)
+        {
+            string sql = $"SELECT Id FROM Actor WHERE Name='{actor.Name}' AND Age='{actor.Age}'";
 
+            var cmd = new MySqlCommand(sql, cnn);
+
+            var reader = cmd.ExecuteScalar();
+
+            actor.Id = int.Parse(reader.ToString());
+
+            return actor.Id;
+        }
+        public int GetMovieId(Movie movie)
+        {
+            string sql = $"SELECT Id FROM Movie WHERE Title='{movie.Title}' AND Year='{movie.Year}'";
+
+            var cmd = new MySqlCommand(sql, cnn);
+
+            var reader = cmd.ExecuteScalar();
+
+            movie.Id = int.Parse(reader.ToString());
+
+            return movie.Id;
+        }
         public void AddMovie(Movie movie)
         {
             // Kolla om filmen redan finns, uppdatera i så fall
@@ -32,11 +55,11 @@
             var adt = new MySqlDataAdapter(CheckIfExist, cnn);
             adt.Fill(dt);
 
-           
+
 
             if (dt.Rows.Count > 0)
             {
-                Console.WriteLine("Den filmen finns redan i databasen");
+                Console.WriteLine("Den filmen finns redan i databasen");             
             }
             else // Om inte, lägg till filmen i databasen
             {
@@ -46,20 +69,26 @@
                 adt = new MySqlDataAdapter(sql, cnn);
                 adt.Fill(dt);
 
-                
-                /*
-                string Newsql = $"INSERT INTO `ConnectionTable`(`MovieId`) SELECT Id FROM Movie WHERE Title = '{movie.Title}'";
-                var cmd = new MySqlCommand(Newsql, cnn);
-                cmd.ExecuteNonQuery();
-                */
+                //Actor actor = new() { Name = "Schulze Oscar", Age = 58, BornYear = 1963 };
+                //AddActorToMovie(actor, movie);
 
+            }
+            string klarellerinte = "";
+            while (klarellerinte != "KLAR")
+            {
+                Actor actor = new Actor();
+                actor = actor.CreateActor();
+                AddActor(actor);
+                AddActorToMovie(actor, movie);
 
+                Console.WriteLine("Vill du lägga till fler skådespelare till filmen? Skriv KLAR ifall du inte vill lägga till fler");
+                klarellerinte = Console.ReadLine();
             }
 
             
 
-            //Actor actor = new() { Name = "Pitt Brad", Age = 58, BornYear = 1963 };
-            //AddActorToMovie(actor, movie);
+
+
 
 
 
@@ -72,14 +101,27 @@
 
         public void AddActor(Actor actor)
         {
-            string sql = $"INSERT INTO `Actor`(`Name`, `Age`, `BornYear`)" +
-                $" VALUES ('{actor.Name}','{actor.Age}', '{actor.BornYear}')";
-
-
+            string CheckIfActorExist = $"SELECT * FROM Actor WHERE Name='{actor.Name}' AND Age='{actor.Age}'";
 
             var dt = new DataTable();
-            var adt = new MySqlDataAdapter(sql, cnn);
+            var adt = new MySqlDataAdapter(CheckIfActorExist, cnn);
             adt.Fill(dt);
+
+            if (dt.Rows.Count > 0)
+            {
+                Console.WriteLine("This actor already exist in the database");
+            }
+            else
+            {
+                string insertActorSql = $"INSERT INTO `Actor`(`Name`, `Age`, `BornYear`) VALUES ('{actor.Name}','{actor.Age}','{actor.BornYear}')";
+
+                var cmd = new MySqlCommand(insertActorSql, cnn);
+
+                cmd.ExecuteNonQuery();
+            }
+
+
+
             // Kolla om skådespelaren finns i databasen
             // Uppdatera i så fall annars
             // Lägg till skådespelaren i databasen
@@ -87,42 +129,25 @@
 
         public void AddActorToMovie(Actor actor, Movie movie)
         {
-            /*
-            movie.Actors.Add(actor);
-            movie.Actors.Add(actor);
-            movie.Actors.Add(actor);
-            string GetNameFromList(List<Actor> actors)
-            {
-                string names = "";
 
-                foreach (Actor name in actors)
-                {
-                    names += (name.Name) + "\n";
-                }
-                return names;
-            }
-            */
             // Kolla om skådespelaren redan finns
-            string CheckIfExist = $"SELECT * FROM Actor WHERE Name = '{actor.Name}' AND Age='{actor.Age}'";
+            string CheckIfExist = $"SELECT * FROM ConnectionTable WHERE ActorId='{GetActorId(actor)}' AND MovieId='{GetMovieId(movie)}'";
             var dt = new DataTable();
             var adt = new MySqlDataAdapter(CheckIfExist, cnn);
             adt.Fill(dt);
-            
+
             if (dt.Rows.Count > 0)
             {
-                string AddToConnectionTable = $"INSERT INTO `ConnectionTable`(`ActorId`) SELECT Id FROM Actor WHERE Name='{actor.Name} AND Age={actor.Age}'";
-                var cmd = new MySqlCommand(AddToConnectionTable, cnn);
-                cmd.ExecuteNonQuery();
+
+                Console.WriteLine("The Connection already exist");
+
             }
             else // Om inte, lägg till filmen i databasen
             {
-                string sql = $"INSERT INTO `Actor`(`Name`, `Age`, `BornYear`) VALUES ('{actor.Name}','{actor.Age}','{actor.BornYear}')";
+                string sql = $"INSERT INTO `ConnectionTable`(`MovieId`,`ActorId`) VALUES ('{GetMovieId(movie)}','{GetActorId(actor)}')";
                 var cmd = new MySqlCommand(sql, cnn);
                 cmd.ExecuteNonQuery();
 
-                string AddToConnectionTable = $"INSERT INTO `ConnectionTable`(`ActorId`) SELECT Id FROM Actor,Movie WHERE Actor.Name='{actor.Name}' AND Movie.Title='{movie.Title}'";
-                cmd = new MySqlCommand(AddToConnectionTable, cnn);
-                cmd.ExecuteNonQuery();
 
             }
 
