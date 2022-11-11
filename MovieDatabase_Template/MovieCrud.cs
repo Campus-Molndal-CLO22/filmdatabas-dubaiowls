@@ -23,7 +23,7 @@
 
             cnn.Open();
         }
-        public int GetActorId(Actor actor)
+        public int GetActorId(Actor actor) // Hämtar en skådespelaren id ifrån databasen
         {
             string sql = $"SELECT Id FROM Actor WHERE Name='{actor.Name}' AND Age='{actor.Age}'";
 
@@ -35,7 +35,7 @@
 
             return actor.Id;
         }
-        public int GetMovieId(Movie movie)
+        public int GetMovieId(Movie movie) // Hämtar en films id ifrån databasen
         {
             string sql = $"SELECT Id FROM Movie WHERE Title='{movie.Title}' AND Year='{movie.Year}'";
 
@@ -55,11 +55,9 @@
             var adt = new MySqlDataAdapter(CheckIfExist, cnn);
             adt.Fill(dt);
 
-
-
-            if (dt.Rows.Count > 0)
+            if (dt.Rows.Count > 0) // Om man får tillbaka något betyder det att filmen redan finns i databasen
             {
-                Console.WriteLine("Den filmen finns redan i databasen");             
+                Console.WriteLine($"The movie {movie.Title} already exist in the database");             
             }
             else // Om inte, lägg till filmen i databasen
             {
@@ -69,68 +67,52 @@
                 adt = new MySqlDataAdapter(sql, cnn);
                 adt.Fill(dt);
 
-                //Actor actor = new() { Name = "Schulze Oscar", Age = 58, BornYear = 1963 };
-                //AddActorToMovie(actor, movie);
-
+                Console.WriteLine($"The movie {movie.Title} was added to the database");
             }
             string klarellerinte = "";
             while (klarellerinte != "KLAR")
             {
                 Actor actor = new Actor();
                 actor = actor.CreateActor();
-                AddActor(actor);
-                AddActorToMovie(actor, movie);
+                AddActor(actor); // Lägg till skådespelarna i databasen
+                AddActorToMovie(actor, movie); // Lägg till relationen mellan filmen och skådespelarna i databasen
 
-                Console.WriteLine("Vill du lägga till fler skådespelare till filmen? Skriv KLAR ifall du inte vill lägga till fler");
+                Console.WriteLine("Skriv KLAR ifall du inte vill lägga till fler skådespelare. Annars klicka på valfri knapp");
                 klarellerinte = Console.ReadLine();
             }
 
-            
-
-
-
-
-
-
-            //AddActor(actor);
-            // Lägg till skådespelarna i databasen
-            //AddActorToMovie(actor, movie);
-            // Lägg till relationen mellan filmen och skådespelarna i databasen
 
         }
 
         public void AddActor(Actor actor)
         {
+
+            // Kolla om skådespelaren finns i databasen
             string CheckIfActorExist = $"SELECT * FROM Actor WHERE Name='{actor.Name}' AND Age='{actor.Age}'";
 
             var dt = new DataTable();
             var adt = new MySqlDataAdapter(CheckIfActorExist, cnn);
             adt.Fill(dt);
 
-            if (dt.Rows.Count > 0)
+            if (dt.Rows.Count > 0) // Om skådespelaren redan finns i databasen
             {
                 Console.WriteLine("This actor already exist in the database");
             }
-            else
+            else // Lägg till skådespelaren i databasen om den inte redan finns
             {
                 string insertActorSql = $"INSERT INTO `Actor`(`Name`, `Age`, `BornYear`) VALUES ('{actor.Name}','{actor.Age}','{actor.BornYear}')";
 
                 var cmd = new MySqlCommand(insertActorSql, cnn);
-
                 cmd.ExecuteNonQuery();
+                Console.WriteLine($"The actor {actor.Name} was added to the database");
             }
-
-
-
-            // Kolla om skådespelaren finns i databasen
-            // Uppdatera i så fall annars
-            // Lägg till skådespelaren i databasen
+         
         }
 
         public void AddActorToMovie(Actor actor, Movie movie)
         {
 
-            // Kolla om skådespelaren redan finns
+            // Kolla om relationen finns i databasen, i så fall görs ingenting
             string CheckIfExist = $"SELECT * FROM ConnectionTable WHERE ActorId='{GetActorId(actor)}' AND MovieId='{GetMovieId(movie)}'";
             var dt = new DataTable();
             var adt = new MySqlDataAdapter(CheckIfExist, cnn);
@@ -142,20 +124,13 @@
                 Console.WriteLine("The Connection already exist");
 
             }
-            else // Om inte, lägg till filmen i databasen
+            else // Om inte, skapa relationen mellan skådespelaren och filmen
             {
                 string sql = $"INSERT INTO `ConnectionTable`(`MovieId`,`ActorId`) VALUES ('{GetMovieId(movie)}','{GetActorId(actor)}')";
                 var cmd = new MySqlCommand(sql, cnn);
                 cmd.ExecuteNonQuery();
-
-
+                Console.WriteLine($"The connection has been made!");
             }
-
-
-
-
-            // Kolla om relationen finns i databasen, i så fall är du klar
-            // Annars lägg till relationen mellan filmen och skådespelaren i databasen
 
         }
         /*
