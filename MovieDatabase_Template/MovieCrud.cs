@@ -11,7 +11,7 @@
 
     public class MovieCrud
     {
-        //string connString = "";
+        string connString = "";
         MySqlConnection cnn = null;
 
 
@@ -25,7 +25,7 @@
         }
         public int GetActorId(Actor actor) // Hämtar en skådespelaren id ifrån databasen
         {
-            string sql = $"SELECT Id FROM Actor WHERE Name='{actor.Name}' AND Age='{actor.Age}'";
+            string sql = $"SELECT Id FROM Actor WHERE Name='{actor.Name}' AND Age='{actor.Age}' AND BirthYear ='{actor.BirthYear}'";
 
             var cmd = new MySqlCommand(sql, cnn);
 
@@ -37,12 +37,13 @@
         }
         public int GetMovieId(Movie movie) // Hämtar en films id ifrån databasen
         {
-            string sql = $"SELECT Id FROM Movie WHERE Title='{movie.Title}' AND Year='{movie.Year}'";
+            string sql = $"SELECT Id FROM Movie WHERE Title='{movie.Title}' AND Year ='{movie.Year}'";
 
             var cmd = new MySqlCommand(sql, cnn);
 
             var reader = cmd.ExecuteScalar();
 
+            
             movie.Id = int.Parse(reader.ToString());
 
             return movie.Id;
@@ -50,7 +51,7 @@
         public void AddMovie(Movie movie)
         {
             // Kolla om filmen redan finns, uppdatera i så fall
-            string CheckIfExist = $"SELECT Title FROM Movie WHERE Title = '{movie.Title}'";
+            string CheckIfExist = $"SELECT Id FROM Movie WHERE Title ='{movie.Title}' AND Year ='{movie.Year}' AND Genre ='{movie.Genre}'";
             var dt = new DataTable();
             var adt = new MySqlDataAdapter(CheckIfExist, cnn);
             adt.Fill(dt);
@@ -73,8 +74,8 @@
             while (klarellerinte != "KLAR")
             {
                 Actor actor = new Actor();
-                actor = actor.CreateActor();
-                AddActor(actor); // Lägg till skådespelarna i databasen
+                
+                AddActor(actor = actor.CreateActor()); // Lägg till skådespelarna i databasen
                 AddActorToMovie(actor, movie); // Lägg till relationen mellan filmen och skådespelarna i databasen
 
                 Console.WriteLine("Skriv KLAR ifall du inte vill lägga till fler skådespelare. Annars klicka på valfri knapp");
@@ -88,7 +89,7 @@
         {
 
             // Kolla om skådespelaren finns i databasen
-            string CheckIfActorExist = $"SELECT * FROM Actor WHERE Name='{actor.Name}' AND Age='{actor.Age}'";
+            string CheckIfActorExist = $"SELECT * FROM Actor WHERE Name ='{actor.Name}' AND Age ='{actor.Age}'";
 
             var dt = new DataTable();
             var adt = new MySqlDataAdapter(CheckIfActorExist, cnn);
@@ -100,7 +101,7 @@
             }
             else // Lägg till skådespelaren i databasen om den inte redan finns
             {
-                string insertActorSql = $"INSERT INTO `Actor`(`Name`, `Age`, `BornYear`) VALUES ('{actor.Name}','{actor.Age}','{actor.BornYear}')";
+                string insertActorSql = $"INSERT INTO `Actor`(`Name`, `Age`, `BirthYear`) VALUES ('{actor.Name}','{actor.Age}','{actor.BirthYear}')";
 
                 var cmd = new MySqlCommand(insertActorSql, cnn);
                 cmd.ExecuteNonQuery();
@@ -132,6 +133,24 @@
                 Console.WriteLine($"The connection has been made!");
             }
 
+        }
+        public void GetMovies()
+        {
+            string sql = $"SELECT Title, Actors FROM ActorsInMovie";
+            var dt = new DataTable();
+            var adt = new MySqlDataAdapter(sql, cnn);
+            adt.Fill(dt);
+            if (dt.Rows.Count > 0)
+            {
+                
+                foreach (DataRow row in dt.Rows)
+                {
+                    Console.WriteLine($"{row["Title"]} - {row["Actors"]}");
+
+                }
+            }
+
+            
         }
         /*
         public List<Movie> GetMovies()
