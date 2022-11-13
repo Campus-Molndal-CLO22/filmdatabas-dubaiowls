@@ -14,7 +14,7 @@
             
         }
 
-        public Actor CreateActor()
+        public static Actor CreateActor()
         {
             string name = "";
             int age, birthYear;

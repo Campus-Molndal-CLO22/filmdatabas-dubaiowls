@@ -73,9 +73,9 @@
             string klarellerinte = "";
             while (klarellerinte != "KLAR")
             {
-                Actor actor = new Actor();
+                Actor actor = Actor.CreateActor();
                 
-                AddActor(actor = actor.CreateActor()); // Lägg till skådespelarna i databasen
+                AddActor(actor); // Lägg till skådespelarna i databasen
                 AddActorToMovie(actor, movie); // Lägg till relationen mellan filmen och skådespelarna i databasen
 
                 Console.WriteLine("Skriv KLAR ifall du inte vill lägga till fler skådespelare. Annars klicka på valfri knapp");
