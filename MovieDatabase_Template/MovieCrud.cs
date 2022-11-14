@@ -23,6 +23,11 @@
 
             cnn.Open();
         }
+
+        
+        public void AddMovie(Movie movie)
+        {
+
         public int GetActorId(Actor actor) // Hämtar en skådespelaren id ifrån databasen
         {
             string sql = $"SELECT Id FROM Actor WHERE Name='{actor.Name}' AND Age='{actor.Age}' AND BirthYear ='{actor.BirthYear}'";
@@ -48,9 +53,26 @@
             var adt = new MySqlDataAdapter(sql, cnn);
             adt.Fill(dt);
 
-            // Kolla om filmen redan finns, uppdatera i så fall
-            // Om inte, lägg till filmen i databasen
 
+            string sql = $"SELECT * FROM `Movie` WHERE `Title` = '{movie.Title}' AND `Year` = '{movie.Year}'";
+            MySqlCommand cmd = new MySqlCommand(sql, cnn);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if (rdr.HasRows)
+            {
+                Console.WriteLine("Movie already exists in database");
+                Console.ReadLine();
+                cnn.Close();
+            }
+            else
+            {
+                rdr.Close();
+                sql = $"INSERT INTO `Movie`(`Title`, `Year`, `Genre`, `Actors`,`IMDB` ) VALUES('{movie.Title}','{movie.Year}','{movie.Genre}','{movie.Actors}', '{movie.IMDB}')";
+                cmd = new MySqlCommand(sql, cnn);
+                cmd.ExecuteNonQuery();
+                Console.WriteLine("Movie added to database");
+                Console.ReadLine();
+                cnn.Close();
+            }
 
             
             movie.Id = int.Parse(reader.ToString());
@@ -97,6 +119,26 @@
         public void AddActor(Actor actor)
         {
 
+            cnn.Open();
+            string sql = $"SELECT * FROM `Actor` WHERE `Name` = '{actor.Name}' AND `BornYear` = '{actor.BornYear}'";
+            MySqlCommand cmd = new MySqlCommand(sql, cnn);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if (rdr.HasRows)
+            {
+                Console.WriteLine("Actor already exists in database");
+                cnn.Close();
+            }
+            else
+            {
+                rdr.Close();
+                sql = $"INSERT INTO `Actor`(`Name`, `Age`, `BornYear`, `Movies`) VALUES ('{actor.Name}','{actor.Age}', '{actor.BornYear}','{actor.Movies}')";
+                cmd = new MySqlCommand(sql, cnn);
+                cmd.ExecuteNonQuery();
+                Console.WriteLine("Actor added to database");
+                cnn.Close();
+            }
+
+
             // Kolla om skådespelaren finns i databasen
             string CheckIfActorExist = $"SELECT * FROM Actor WHERE Name ='{actor.Name}' AND Age ='{actor.Age}'";
 
@@ -116,8 +158,7 @@
                 cmd.ExecuteNonQuery();
                 Console.WriteLine($"The actor {actor.Name} was added to the database");
             }
-         
-        }
+     }
 
         public void AddActorToMovie(Actor actor, Movie movie)
         {
@@ -273,7 +314,11 @@
             // Ta bort alla relationer mellan skådespelaren och filmerna från databasen
         }
 
+
+        public void DeleteMovie(int movieId)
+
         public void DeleteMovie(int moveId)
+
         {
             // Ta bort filmen från databasen
             // Ta bort alla relationer mellan filmen och skådespelarna från databasen
