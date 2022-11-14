@@ -106,6 +106,8 @@
         public List<Movie> GetMovies()
         {
             // Hämta alla filmer från databasen
+            Movie movie = new();
+            List<Movie> movies = new();
             dt = new DataTable();
             sql = "SELECT * " +
                     "FROM Movie";
@@ -117,13 +119,24 @@
 
             foreach(DataRow row in dt.Rows)
             {
+<<<<<<< HEAD
                 Console.WriteLine($"{movie.Title = row["Title"].ToString()}, {row["Year"]}, {row["Genre"]}, {row["IMDB"].ToString}");
                 movie.Actors = new List<Actor>();
                 movies.Add(movie);
+=======
+                Console.WriteLine($"{movie.Title = (string)row["Title"]}, {movie.Year = (int)row["Year"]}, {movie.Genre = (string)row["Genre"]}, {movie.IMDB = (string)row["IMDB"]}");
+                movies.Add(movie);
+                    
+>>>>>>> 1f073eb6f05e54673f498a0a3aa90a710e3c0562
             }
 
             return movies;
             // Hämta alla skådespelare från databasen
+            sql = "SELECT *" +
+                    "FROM Actor";
+            dt = new DataTable();
+            adt.Fill(dt);
+
             // Hämta alla relationer mellan filmer och skådespelare från databasen
             // Skapa en lista med filmer
             // Lägg till skådespelarna till filmerna
