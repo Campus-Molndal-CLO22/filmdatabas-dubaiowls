@@ -29,6 +29,7 @@
 
             var cmd = new MySqlCommand(sql, cnn);
 
+
             var reader = cmd.ExecuteScalar();
 
             actor.Id = int.Parse(reader.ToString());
@@ -42,6 +43,14 @@
             var cmd = new MySqlCommand(sql, cnn);
 
             var reader = cmd.ExecuteScalar();
+
+            var dt = new DataTable();
+            var adt = new MySqlDataAdapter(sql, cnn);
+            adt.Fill(dt);
+
+            // Kolla om filmen redan finns, uppdatera i så fall
+            // Om inte, lägg till filmen i databasen
+
 
             
             movie.Id = int.Parse(reader.ToString());
