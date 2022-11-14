@@ -1,8 +1,12 @@
 {
   "ExpandedNodes": [
     "",
-    "\\MovieDatabase_Template"
+    "\\MovieDatabase_Template",
+    "\\MovieDatabase_Template\\bin",
+    "\\MovieDatabase_Template\\bin\\Debug",
+    "\\MovieDatabase_Template\\bin\\Debug\\net6.0",
+    "\\MovieDatabase_Template\\bin\\Debug\\net6.0\\runtimes"
   ],
-  "SelectedNode": "\\MovieDatabase_Template\\MovieCrud.cs",
+  "SelectedNode": "\\MovieDatabase_Template\\Program.cs",
   "PreviewInSolutionExplorer": false
 }
