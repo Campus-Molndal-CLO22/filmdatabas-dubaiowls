@@ -13,7 +13,7 @@
     {
         MySqlConnection cnn = null;
         MySqlDataAdapter adt = new();
-        DataTable dt = new ();
+        DataTable dt = new();
         string sql = "";
 
         public MovieCrud(string connString)
@@ -33,38 +33,38 @@
             if (dt.Rows.Count > 0)      // Kolla om filmen redan finns, uppdatera i så fall
             {
                 Console.WriteLine("Den filmen finns redan i databasen");
-                foreach(DataRow row in dt.Rows)
+                foreach (DataRow row in dt.Rows)
                 {
                     Console.WriteLine($"{row["\"Title\",\"Year\",\"Genre\",\"IMDB\""]}");
                 }
             }
             else                        // Om inte, lägg till filmen i databasen
             {
-            sql = $"INSERT INTO `Movie`(`Titel`, `Year`, `Genre`,`IMDB` ) " +
-                  $"VALUES('{movie.Title}','{movie.Year}','{movie.Genre}','{movie.IMDB}')";
+                sql = $"INSERT INTO `Movie`(`Titel`, `Year`, `Genre`,`IMDB` ) " +
+                      $"VALUES('{movie.Title}','{movie.Year}','{movie.Genre}','{movie.IMDB}')";
 
-            var dt = new DataTable();
+                var dt = new DataTable();
 
-            var cmd = new MySqlCommand(sql, cnn);
-            var adt = new MySqlDataAdapter(sql, cnn);
-            
+                var cmd = new MySqlCommand(sql, cnn);
+                var adt = new MySqlDataAdapter(sql, cnn);
 
-            adt.Fill(dt);
+
+                adt.Fill(dt);
 
 
                 dt = new DataTable();
                 adt = new MySqlDataAdapter(sql, cnn);
                 adt.Fill(dt);
             }
-            
-            
+
+
             //Actor actor = new() { Name = "Chris Pratt", Age = 58, BornYear = 1963, Movies = "Fight Club\nThe Big Short" };
 
             //AddActor(actor);
             // Lägg till skådespelarna i databasen
             //AddActorToMovie(actor, movie);
             // Lägg till relationen mellan filmen och skådespelarna i databasen
-            
+
         }
 
         public void AddActor(Actor actor)
@@ -88,11 +88,11 @@
 
                 foreach (Actor name in actors)
                 {
-                    names +=(name.Name) + "\n";
+                    names += (name.Name) + "\n";
                 }
                 return names;
             }
-            
+
             sql = $"UPDATE `Movie` SET `Actors` = '{GetNameFromList(movie.Actors)}' WHERE Movie.Titel ='{movie.Title}'";
             //UPDATE `Movie` SET `Id`= '[value-1]',`Titel`= '[value-2]',`Year`= '[value-3]',`Genre`= '[value-4]',`Actors`= '[value-5]',`IMDB`= '[value-6]
 
@@ -114,20 +114,17 @@
             adt = new MySqlDataAdapter(sql, cnn);
             adt.Fill(dt);
 
-            Movie movie = new();
-            List<Movie> movies = new();
 
-            foreach(DataRow row in dt.Rows)
+            foreach (DataRow row in dt.Rows)
             {
-<<<<<<< HEAD
                 Console.WriteLine($"{movie.Title = row["Title"].ToString()}, {row["Year"]}, {row["Genre"]}, {row["IMDB"].ToString}");
                 movie.Actors = new List<Actor>();
                 movies.Add(movie);
-=======
+
                 Console.WriteLine($"{movie.Title = (string)row["Title"]}, {movie.Year = (int)row["Year"]}, {movie.Genre = (string)row["Genre"]}, {movie.IMDB = (string)row["IMDB"]}");
                 movies.Add(movie);
-                    
->>>>>>> 1f073eb6f05e54673f498a0a3aa90a710e3c0562
+
+
             }
 
             return movies;
@@ -191,7 +188,7 @@
             dt = new DataTable();
             Actor actor = new();
             List<Actor> actors = new();
-            
+
             sql = "SELECT * " +
                   "FROM Actor";
             adt = new MySqlDataAdapter(sql, cnn);
