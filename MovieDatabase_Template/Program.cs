@@ -2,20 +2,23 @@
 using MovieDatabase_Template;
 using Org.BouncyCastle.Bcpg;
 
-Console.WriteLine("Vad heter din användarprofil på datorn? (exempel: 'C:\\Users\\Adam Hasan\\'  innebär att du skriver bara 'Adam Hasan'.)");  
-string Användare = Console.ReadLine();
-try 
+Console.WriteLine("Vad heter din användarprofil på datorn? (exempel: 'C:\\Users\\Joe Johnson\\'  innebär att du skriver bara 'Joe Johnson'.)");  
+    string Användare = Console.ReadLine();
+try { 
+    string[] filesTEST = Directory.GetFiles("C:\\Users\\" +Användare+ "\\Desktop\\",  //letar igenom Desktop & alla dess subfolders efter filen loginSQL123.txt, kunde inte ha högre upp i mappstrukturen även med admin-rättigheter då jag skulle vart tvungen att implementera try & catch för folders som är o-accessbara via visual studio.
+    "loginSQL123.txt", SearchOption.AllDirectories);
+    StreamReader loginSQLTEST = new StreamReader(path: filesTEST[0]);
+}
+catch
 {
+    Console.WriteLine("Error: Press enter to exit program.");
+    Console.ReadLine();
+    Environment.Exit(0);
+}
     string[] files = Directory.GetFiles("C:\\Users\\" +Användare+ "\\Desktop\\",  //letar igenom Desktop & alla dess subfolders efter filen loginSQL123.txt, kunde inte ha högre upp i mappstrukturen även med admin-rättigheter då jag skulle vart tvungen att implementera try & catch för folders som är o-accessbara via visual studio.
     "loginSQL123.txt", SearchOption.AllDirectories);
     StreamReader loginSQL = new StreamReader(path: files[0]);
-    MovieCrud SQLHandler = new(@"Server=ns8.inleed.net;Database=s60127_DubaiOwls;" +loginSQL.ReadToEnd() + ";");
-}
-catch 
-{
-    Console.WriteLine("Error: Login to database failed, it could be due to one of these reasons: \n1. Your loginSQL123.txt file isn't located in C:\\Users\\(your user name)\\Desktop\\ or one of its subfolders. \n2. Your Uid and password in the textfile don't match any viable login. \n3. Your textfile name is misspelled, make sure its name is loginSQL123.txt !");
-    Environment.Exit(0);
-}
+MovieCrud SQLHandler = new(@"Server=ns8.inleed.net;Database=s60127_DubaiOwls;" +loginSQL.ReadToEnd() + ";");
 
 
 Console.WriteLine("Menuchoices: ");
