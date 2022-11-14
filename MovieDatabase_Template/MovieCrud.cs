@@ -134,18 +134,21 @@
             }
 
         }
-        public void GetMovies()
+        public void ListMoviesWithActors()
         {
-            string sql = $"SELECT Title, Actors FROM ActorsInMovie";
+            string sql = $"SELECT DISTINCT ActorsInMovie.Title, Actors, Movie.Year, Genre, Imdb FROM ActorsInMovie, Movie " +
+                         $"WHERE ActorsInMovie.M_Id = Movie.Id " +
+                         $"ORDER BY Title";
             var dt = new DataTable();
             var adt = new MySqlDataAdapter(sql, cnn);
             adt.Fill(dt);
             if (dt.Rows.Count > 0)
             {
-                
+                Console.WriteLine($"Movie Titles                        : Actors               : Release Year   : Genre        : Imdb");
+                Console.WriteLine($"************************************:**********************:****************:**************:******");
                 foreach (DataRow row in dt.Rows)
                 {
-                    Console.WriteLine($"{row["Title"]} - {row["Actors"]}");
+                    Console.WriteLine($"{row["Title"],-35} : {row["Actors"],-20} : {row["Year"],-14} : {row["Genre"],-12} : {row["Imdb"]}");
 
                 }
             }
@@ -260,7 +263,7 @@
             // Ta bort alla relationer mellan skådespelaren och filmerna från databasen
         }
 
-        public void DeleteMove(int moveId)
+        public void DeleteMovie(int moveId)
         {
             // Ta bort filmen från databasen
             // Ta bort alla relationer mellan filmen och skådespelarna från databasen
