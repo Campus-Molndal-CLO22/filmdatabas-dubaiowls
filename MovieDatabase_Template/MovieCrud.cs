@@ -136,7 +136,7 @@
         }
         public void ListMoviesWithActors()
         {
-            string sql = $"SELECT DISTINCT ActorsInMovie.Title, Actors, Movie.Year, Genre, Imdb FROM ActorsInMovie, Movie " +
+            string sql = $"SELECT ActorsInMovie.Title, Actors, Movie.Year, Genre, Imdb FROM ActorsInMovie, Movie " +
                          $"WHERE ActorsInMovie.M_Id = Movie.Id " +
                          $"ORDER BY Title";
             var dt = new DataTable();
