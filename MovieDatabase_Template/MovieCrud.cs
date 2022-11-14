@@ -45,20 +45,6 @@
 
             var dt = new DataTable();
 
-            sql = $"INSERT INTO " +
-                         $"           `Movie`" +
-                         $"                (`Titel`," +
-                         $"                 `Year`, " +
-                         $"                 `Genre`, " +
-                         $"                 `Actors`," +
-                         $"                 `IMDB` ) " +
-                         $"VALUES(" +
-                         $"       '{movie.Title}'," +
-                         $"       '{movie.Year}'," +
-                         $"       '{movie.Genre}'," +
-                         $"       '{movie.Actors}', " +
-                         $"       '{movie.IMDB}'))";
-
             var cmd = new MySqlCommand(sql, cnn);
             var adt = new MySqlDataAdapter(sql, cnn);
             
@@ -117,7 +103,7 @@
             // Annars lägg till relationen mellan filmen och skådespelaren i databasen
 
         }
-        public void GetMovies()
+        public List<Movie> GetMovies()
         {
             // Hämta alla filmer från databasen
             dt = new DataTable();
@@ -126,10 +112,17 @@
             adt = new MySqlDataAdapter(sql, cnn);
             adt.Fill(dt);
 
+            Movie movie = new();
+            List<Movie> movies = new();
+
             foreach(DataRow row in dt.Rows)
             {
-                Console.WriteLine($"{row["Title"]}, {row["Year"]}, {row["Genre"]}, {row["IMDB"]}");
+                Console.WriteLine($"{movie.Title = row["Title"].ToString()}, {row["Year"]}, {row["Genre"]}, {row["IMDB"].ToString}");
+                movie.Actors = new List<Actor>();
+                movies.Add(movie);
             }
+
+            return movies;
             // Hämta alla skådespelare från databasen
             // Hämta alla relationer mellan filmer och skådespelare från databasen
             // Skapa en lista med filmer
@@ -177,18 +170,41 @@
             // Lägg till skådespelarna till filmerna
             // Returnera listan med filmer
         }
-
+        */
 
         public List<Actor> GetActors()
         {
             // Hämta alla skådespelare från databasen
+            dt = new DataTable();
+            Actor actor = new();
+            List<Actor> actors = new();
+            
+            sql = "SELECT * " +
+                  "FROM Actor";
+            adt = new MySqlDataAdapter(sql, cnn);
+            adt.Fill(dt);
+
+
+            foreach (DataRow row in dt.Rows)
+            {
+                actor.Id = (int)row["Id"];
+                actor.Name = (string)row["Name"];
+                actor.BornYear = (int)row["BornYear"];
+                actors.Add(actor);
+            }
+
+
+            sql = "SELECT * " +
+                  "FROM ConnectionTable" +
+                  $"WHERE Actor.Id = {actor.Id}";
+
             // Hämta alla relationer mellan filmer och skådespelare från databasen
             // Hämta alla matchande filmer från databasen
             // Skapa en lista med skådespelare
             // Lägg till filmerna till skådespelarna
             // Returnera listan med skådespelare
         }
-
+        /*
         public List<Actor> GetActorsInMovie(Movie movie)
         {
             // Hämta alla skådespelare från databasen
