@@ -17,18 +17,11 @@
         public string IMDB { get; set; }
 
         // Lägg till fler properties
-        public string Actors { get; set; }
+        public List<string> Actors { get; set; }
 
         public Movie()
         {
-
+            
         }
-    }
-
-    public class Actor
-    {
-        public int Id { get; set; }
-        public string Name;
-        public int BornYear { get; set; }
     }
 }
