@@ -122,7 +122,7 @@
             if (dt.Rows.Count > 0)
             {
 
-                Console.WriteLine("The Connection already exist");
+                Console.WriteLine("The actor is already listed on this movie");
 
             }
             else // Om inte, skapa relationen mellan skådespelaren och filmen
