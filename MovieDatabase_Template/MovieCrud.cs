@@ -17,16 +17,7 @@
 
         public MovieCrud(string connString)
         {
-            var connection = new MySqlConnection(connString);
-            cnn = connection;
-
-
-            cnn.Open();
         }
-
-        
-        public void AddMovie(Movie movie)
-        {
 
         public int GetActorId(Actor actor) // Hämtar en skådespelaren id ifrån databasen
         {
@@ -54,8 +45,8 @@
             adt.Fill(dt);
 
 
-            string sql = $"SELECT * FROM `Movie` WHERE `Title` = '{movie.Title}' AND `Year` = '{movie.Year}'";
-            MySqlCommand cmd = new MySqlCommand(sql, cnn);
+            sql = $"SELECT * FROM `Movie` WHERE `Title` = '{movie.Title}' AND `Year` = '{movie.Year}'";
+            cmd = new MySqlCommand(sql, cnn);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.HasRows)
             {
@@ -120,7 +111,7 @@
         {
 
             cnn.Open();
-            string sql = $"SELECT * FROM `Actor` WHERE `Name` = '{actor.Name}' AND `BornYear` = '{actor.BornYear}'";
+            string sql = $"SELECT * FROM `Actor` WHERE `Name` = '{actor.Name}' AND `BornYear` = '{actor.BirthYear}'";
             MySqlCommand cmd = new MySqlCommand(sql, cnn);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.HasRows)
@@ -131,7 +122,7 @@
             else
             {
                 rdr.Close();
-                sql = $"INSERT INTO `Actor`(`Name`, `Age`, `BornYear`, `Movies`) VALUES ('{actor.Name}','{actor.Age}', '{actor.BornYear}','{actor.Movies}')";
+                sql = $"INSERT INTO `Actor`(`Name`, `Age`, `BornYear`, `Movies`) VALUES ('{actor.Name}','{actor.Age}', '{actor.BirthYear}','{actor.Movies}')";
                 cmd = new MySqlCommand(sql, cnn);
                 cmd.ExecuteNonQuery();
                 Console.WriteLine("Actor added to database");
@@ -154,7 +145,7 @@
             {
                 string insertActorSql = $"INSERT INTO `Actor`(`Name`, `Age`, `BirthYear`) VALUES ('{actor.Name}','{actor.Age}','{actor.BirthYear}')";
 
-                var cmd = new MySqlCommand(insertActorSql, cnn);
+                cmd = new MySqlCommand(insertActorSql, cnn);
                 cmd.ExecuteNonQuery();
                 Console.WriteLine($"The actor {actor.Name} was added to the database");
             }
