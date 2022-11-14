@@ -149,11 +149,12 @@
                 foreach (DataRow row in dt.Rows)
                 {
                     Console.WriteLine($"{row["Title"],-35} : {row["Actors"],-20} : {row["Year"],-14} : {row["Genre"],-12} : {row["Imdb"]}");
+                    if (row["Title"] == row["Title"])
+                    {
 
+                    }
                 }
-            }
-
-            
+            }   
         }
         /*
         public List<Movie> GetMovies()
