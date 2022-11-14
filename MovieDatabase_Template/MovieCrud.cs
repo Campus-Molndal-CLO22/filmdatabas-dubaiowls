@@ -131,7 +131,7 @@
             if (dt.Rows.Count > 0)
             {
 
-                Console.WriteLine("The Connection already exist");
+                Console.WriteLine("The actor is already listed on this movie");
 
             }
             else // Om inte, skapa relationen mellan skådespelaren och filmen
@@ -158,11 +158,12 @@
                 foreach (DataRow row in dt.Rows)
                 {
                     Console.WriteLine($"{row["Title"],-35} : {row["Actors"],-20} : {row["Year"],-14} : {row["Genre"],-12} : {row["Imdb"]}");
-
+                    Console.WriteLine($"------------------------------------:----------------------:----------------:--------------:------");
                 }
             }
-
-            
+            else Console.WriteLine("There are no movies in the database yet!");
+                    
+                    
         }
         /*
         public List<Movie> GetMovies()
