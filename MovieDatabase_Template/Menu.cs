@@ -57,27 +57,37 @@ namespace MovieDatabase_Template
         }
         static string ConnectionString()
         {
-            string connection = "";
-            Console.WriteLine("Vad heter din användarprofil på datorn? (exempel: 'C:\\Users\\Bosse Bossesson\\'  innebär att du skriver bara 'Bosse Bossesson'.)");
-            string Användare = Console.ReadLine();
-            try
+            
+            string Användare = "";
+            bool Correct = false;
+            while (!Correct)
             {
-                string[] filesTEST = Directory.GetFiles(@"C:\Users\" + Användare + @"\Desktop\",  
-                "loginSQL123.txt", SearchOption.AllDirectories);
-                StreamReader loginSQLTEST = new StreamReader(path: filesTEST[0]);
+                
+                Console.WriteLine("Vad heter din användarprofil på datorn? (exempel: 'C:\\Users\\Bosse Bossesson\\'  innebär att du skriver bara 'Bosse Bossesson'.)");
+                Användare = Console.ReadLine();
+                try
+                {
+                    string[] filesTEST = Directory.GetFiles(@"C:\Users\" + Användare + @"\Desktop\",
+                    "loginSQL123.txt", SearchOption.AllDirectories);
+                    StreamReader loginSQLTEST = new StreamReader(path: filesTEST[0]);
+                    Correct = true;
+                }
+                catch
+                {
+                    Console.WriteLine("Kontrollera att du skrev in rätt information");
+                    
+                    //Console.WriteLine("Error: Press enter to exit program.");              
+                    // Console.ReadLine();
+                    //Environment.Exit(0);
+                }
             }
-            catch
-            {
-                Console.WriteLine("Error: Press enter to exit program.");              
-                Console.ReadLine();
-                Environment.Exit(0);
-            }
+            
             string[] files = Directory.GetFiles(@"C:\Users\" + Användare + @"\Desktop\",  //letar igenom Desktop & alla dess subfolders efter filen loginSQL123.txt, kunde inte ha högre upp i mappstrukturen även med admin-rättigheter då jag skulle vart tvungen att implementera try & catch för folders som är o-accessbara via visual studio.
 
             "loginSQL123.txt", SearchOption.AllDirectories);
             StreamReader loginSQL = new StreamReader(path: files[0]);
 
-            connection = @"Server=ns8.inleed.net;Database=s60127_DubaiOwls;" + loginSQL.ReadToEnd();
+            string connection = @"Server=ns8.inleed.net;Database=s60127_DubaiOwls;" + loginSQL.ReadToEnd();
             return connection;
         }
         static void DisplayMenu()
@@ -95,7 +105,7 @@ namespace MovieDatabase_Template
         static void SearchFunctions(MovieCrud SqlHandler)
         {
             
-            Console.WriteLine("1. Search specific movie");
+            Console.WriteLine("1. Search movie by title");
             Console.WriteLine("2. Search for a movie with a specific actor");
             Console.WriteLine("3. Search for an actor in the database");
             Console.WriteLine("4. Search for a specific Genre");

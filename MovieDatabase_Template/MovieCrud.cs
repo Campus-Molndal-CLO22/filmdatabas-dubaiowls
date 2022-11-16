@@ -255,7 +255,8 @@
         {
             Console.Write("Enter the full name of the actor, or enter firstname or lastname:  ");
             string actorName = Console.ReadLine();
-            string sql = $"SELECT * FROM Actor WHERE Name LIKE '%{actorName}%'";
+            string sql = $"SELECT Name, Age, BirthYear FROM Actor " +
+                         $"WHERE Name LIKE '%{actorName}%'";
 
             var dt = new DataTable();
             var adt = new MySqlDataAdapter(sql, cnn);
