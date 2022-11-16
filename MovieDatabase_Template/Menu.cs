@@ -17,50 +17,39 @@ namespace MovieDatabase_Template
             Console.SetWindowSize(150, 40);
             MovieCrud SQLHandler = new(ConnectionString());
 
-            int choice = 0;
+            
             while (true)
             {
                 Console.Clear();
                 DisplayMenu();
-                Console.Write("Enter choice: ");
-                int.TryParse(Console.ReadLine(), out choice);
-                switch (choice)
+                
+                switch (Choice(1,6))
                 {
-                    case 1:
+                    case 1:                
                         Movie movie = Movie.CreateMovie();
                         SQLHandler.AddMovie(movie);
                         break;
                     case 2:
                         Actor actor = Actor.CreateActor();
                         SQLHandler.AddActor(actor);
+                        Console.ReadLine();
                         break;
                     case 3:
-                        SQLHandler.ListMoviesWithActors();
+                        SQLHandler.DisplayAllMovies();
                         Console.ReadLine();
-                        break;
+                        break;                                     
                     case 4:
-                        SQLHandler.SearchSpecificMovie();
-                        Console.ReadLine();
-                        break;
-                    case 5: 
-                        SQLHandler.MovieSearchWithActor();
-                        Console.ReadLine();
-                        break;
-                    case 6:
                         SQLHandler.DisplayAllActors();
                         Console.ReadLine();
                         break;
-                    case 7:
-                        SQLHandler.SearchSpecificActor();
+                    case 5:
+                        SearchFunctions(SQLHandler);
                         Console.ReadLine();
                         break;
-                    case 8:
+                    case 6:
                         Environment.Exit(0);
                         break;
-                    default:
-                        Console.WriteLine("Invalid choice");
-                        Console.ReadLine();
-                        break;
+                    
 
                 }
 
@@ -96,14 +85,63 @@ namespace MovieDatabase_Template
             Console.WriteLine("1. Add movie to the database");
             Console.WriteLine("2. Add actor to the database");
             Console.WriteLine("3. Display all movies existing in the database");
-            Console.WriteLine("4. Search for specific movie");
-            Console.WriteLine("5. Search for a movie containing specific actor");
-            Console.WriteLine("6. Display all actors in the database");
-            Console.WriteLine("7. Search for a specific actor");
-            Console.WriteLine("8. Exit program");
+            Console.WriteLine("4. Display all actors in the database");
+            Console.WriteLine("5. Search functions");
+            Console.WriteLine("6. Exit program");
+            
+            
         }
 
+        static void SearchFunctions(MovieCrud SqlHandler)
+        {
+            
+            Console.WriteLine("1. Search specific movie");
+            Console.WriteLine("2. Search for a movie with a specific actor");
+            Console.WriteLine("3. Search for an actor in the database");
+            Console.WriteLine("4. Search for a specific Genre");
+            Console.WriteLine("5. Back to main menu");
 
+            switch (Choice(1, 5))
+            {
+                case 1:
+                    SqlHandler.SearchSpecificMovie();
+                    break;
+                case 2: 
+                    SqlHandler.MovieSearchWithActor();
+                    break;
+                case 3:
+                    SqlHandler.SearchActor();
+                    break;
+                case 4: SqlHandler.SearchGenre();
+                    break;
+                case 5:
+                    break;
+                    
+            }
+        }
+
+        static int Choice(int min, int max)
+        {
+            int choice;
+
+            while (true)
+            {
+                Console.Write("Enter choice: ");
+                string input = Console.ReadLine();
+
+
+                int.TryParse(input, out choice);
+
+                if (choice < min || choice > max)
+                {
+                    Console.WriteLine("Invalid choice");
+                }
+                else
+                {
+                    return choice;
+                }
+            }
+        }
 
     }
 }

@@ -34,7 +34,7 @@
                 Console.Write("Enter the title of the movie: ");
                 title = Console.ReadLine();
                 Console.Write("Enter the release year of the movie: ");
-                year = int.Parse(Console.ReadLine());
+                int.TryParse(Console.ReadLine(), out year);
                 Console.Write("Enter the genre of the movie: ");
                 genre = Console.ReadLine();
                 Console.Write("Enter the IMDB-link: ");

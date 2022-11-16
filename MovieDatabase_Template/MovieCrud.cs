@@ -136,8 +136,31 @@
             return movie.Id;
         }
 
+        internal void SearchGenre()
+        {
+            Console.Write("Enter a Genre: ");
+            string search = Console.ReadLine();
+            string sql = $"SELECT ActorsInMovie.Title, Actors, Movie.Year, Genre, Imdb FROM ActorsInMovie, Movie " +
+                         $"WHERE ActorsInMovie.M_Id = Movie.Id AND Movie.Genre LIKE '%{search}%' " +
+                         $"ORDER BY Title";
+            var dt = new DataTable();
+            var adt = new MySqlDataAdapter(sql, cnn);
+            adt.Fill(dt);
+            if (dt.Rows.Count > 0)
+            {
+                Console.WriteLine($"************************************:**********************:****************:**************:**********************************************************");
+                Console.WriteLine($"Movie Titles                        : Actors               : Release Year   : Genre        : Imdb");
+                Console.WriteLine($"************************************:**********************:****************:**************:**********************************************************");
+                foreach (DataRow row in dt.Rows)
+                {
+                    Console.WriteLine($"{row["Title"],-35} : {row["Actors"],-20} : {row["Year"],-14} : {row["Genre"],-12} : {row["Imdb"]}");
+                    Console.WriteLine($"------------------------------------:----------------------:----------------:--------------:----------------------------------------------------------");
+                }
+            }
+            else Console.WriteLine($"No movies could be found using {search}");
+        }
 
-        public void ListMoviesWithActors()
+        public void DisplayAllMovies()
         {
             string sql = $"SELECT ActorsInMovie.Title, Actors, Movie.Year, Genre, Imdb FROM ActorsInMovie, Movie " +
                          $"WHERE ActorsInMovie.M_Id = Movie.Id " +
@@ -210,7 +233,7 @@
             Console.Write("Enter the name of the actor: ");
             string search = Console.ReadLine();
             string sql = $"SELECT ActorsInMovie.Title, Actors, Movie.Year, Genre, Imdb FROM ActorsInMovie, Movie " +
-                         $"WHERE ActorsInMovie.M_Id = Movie.Id AND ActorsInMovie.Actors ='{search}' " +
+                         $"WHERE ActorsInMovie.M_Id = Movie.Id AND ActorsInMovie.Actors Like '%{search}%' " +
                          $"ORDER BY Title";
             var dt = new DataTable();
             var adt = new MySqlDataAdapter(sql, cnn);
@@ -228,7 +251,7 @@
             }
             else Console.WriteLine($"No movies could be found using {search}");
         }
-        public void SearchSpecificActor()
+        public void SearchActor()
         {
             Console.Write("Enter the full name of the actor, or enter firstname or lastname:  ");
             string actorName = Console.ReadLine();
@@ -253,6 +276,31 @@
             else Console.WriteLine($"No actors found using {actorName}");
         }
         
+        public List<Movie> DisplayMovies()
+        {
+            string sql = "SELECT * FROM ActorsInMovie";
+            var dt = new DataTable();
+            var adt = new MySqlDataAdapter(sql, cnn);
+            adt.Fill(dt);
+            List<Movie> filmer = new();
+            foreach (DataRow row in dt.Rows)
+            {
+                Movie movie = new Movie();
+                movie.Title = row["Title"].ToString();
+                movie.Actors.Add((string)row["Actors"]);
+                
+                
+                
+                filmer.Add(movie);
+            }
+
+            foreach (Movie movie in filmer)
+            {
+                Console.WriteLine(movie.Title);
+            }
+
+            return filmer;
+        }
         
         
         public void DeleteActor(int actorId)
