@@ -70,6 +70,7 @@ namespace MovieDatabase_Template
                     string[] filesTEST = Directory.GetFiles(@"C:\Users\" + Användare + @"\Desktop\",
                     "loginSQL123.txt", SearchOption.AllDirectories);
                     StreamReader loginSQLTEST = new StreamReader(path: filesTEST[0]);
+
                     Correct = true;
                 }
                 catch
